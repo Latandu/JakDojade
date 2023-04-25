@@ -1,6 +1,7 @@
 #include <iostream>
-
+#include "MapParser.h"
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    MapParser mapParser;
+    mapParser.ParseWholeMap();
     return 0;
 }
