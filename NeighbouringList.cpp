@@ -7,6 +7,7 @@
 void NeighbouringList::InsertNodeAtTailWithoutAL(String *data, int moveCount){
     auto* newNode = new struct SingleNode();
     newNode->data = data;
+    newNode->mover = moveCount;
     newNode->next = nullptr;
     headEngine(newNode);
 }
