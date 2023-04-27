@@ -6,19 +6,36 @@
 #define JAKDOJADE_SINGLELINKEDLIST_H
 
 #include "String.h"
-class SingleLinkedList {
-private:
+#include "Point.h"
+#include "NeighbouringList.h"
+template<class T> class SingleLinkedList {
+protected:
     struct SingleNode{
-        String* data;
+        T* data;
+        Point* point;
         SingleNode* next;
+        int mover = 0;
+        NeighbouringList* adjacencyList;
+        int counter = 0;
+
     };
     struct SingleNode* tail = nullptr;
     struct SingleNode* head = nullptr;
-protected:
-    void InsertNodeAtTail(String* City);
 public:
+    SingleNode *getTail() const {
+        return tail;
+    }
     SingleLinkedList() = default;
     ~SingleLinkedList();
+    SingleNode * getHead() const {
+        return head;
+    }
+    void InsertNodeAtTail(T *data, Point* pointForStr);
+
+    T * GetNameOfCity(int row, int column);
+
+    void headEngine(SingleNode *newNode);
 };
+
 
 #endif //JAKDOJADE_SINGLELINKEDLIST_H

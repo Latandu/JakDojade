@@ -4,12 +4,10 @@
 
 #include "String.h"
 #include <cstring>
-#define BUFFER 50
 
 String::String() {
     string = new char[1];
     string[0] = '\0';
-    size = 1;
 }
 
 String::String(const char *s) {
@@ -31,23 +29,25 @@ String::~String(){
 }
 
 size_t String::getSize() const {
-    return strlen(string);
+    return size;
 }
 
 void String::AddChar(char newChar){
     char* newStr;
     size_t len = getSize();
     if(len + 2 > reservedSize){
-        reservedSize += 50;
+        reservedSize += 15;
         newStr = string;
         string = new char[reservedSize];
         strcpy(string, newStr);
         delete[] newStr;
         strncat(string, &newChar, 1);
+        size = strlen(string);
 
     }
     else{
         strncat(string, &newChar, 1);
+        size = strlen(string);
     }
 }
 char * String::c_str() const {

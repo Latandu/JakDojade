@@ -4,6 +4,8 @@
 
 #include "MapParser.h"
 #include "String.h"
+#include "Point.h"
+#include "BFS.h"
 #include <iostream>
 MapParser::MapParser() {
     std::ios::sync_with_stdio(false);
@@ -13,8 +15,12 @@ MapParser::MapParser() {
     for(int i = 0; i < h; i++){
         mapArray[i] = new char[w];
     }
+
 }
 bool MapParser::CitySearch(int row, int column){
+    auto *point = new Point;
+    point->setRow(row);
+    point->setColumn(column);
     int newRow, newCol;
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
@@ -26,7 +32,7 @@ bool MapParser::CitySearch(int row, int column){
             if (newRow >= 0 && newRow < h && newCol >= 0 && newCol < w) {
                 int newChar = (int)mapArray[newRow][newCol];
                 if((ASCII_0 <= newChar && newChar <= ASCII_9) || (ASCII_A <= newChar && newChar <= ASCII_Z)){
-                    ParseCity(newRow, newCol);
+                    ParseCity(newRow, newCol, point);
                     return true;
                 }
             }
@@ -34,8 +40,9 @@ bool MapParser::CitySearch(int row, int column){
     } return false;
 
 }
-void MapParser::ParseCity(int row, int column){
+void MapParser::ParseCity(int row, int column, Point* point){
     auto *newString = new String;
+
     int newChar = (int)mapArray[row][column];
     while(column > 0 && ((ASCII_0 <= newChar && newChar <= ASCII_9) || (ASCII_A <= newChar && newChar <= ASCII_Z))){
         column--;
@@ -48,11 +55,11 @@ void MapParser::ParseCity(int row, int column){
         column++;
         newChar = (int)mapArray[row][column];
     }
-    InsertNodeAtTail(newString);
+    sslString.InsertNodeAtTail(newString, point);
 
 }
 char MapParser::AvoidWhiteSpaces(char checkC){
-    if(checkC == '\n' || checkC == '\t' || checkC ==' ' || checkC == '\r'){
+    if((int)checkC < 33){
         checkC = (char)getchar();
         AvoidWhiteSpaces(checkC);
     }
@@ -60,27 +67,35 @@ char MapParser::AvoidWhiteSpaces(char checkC){
 };
 void MapParser::ParseWholeMap() {
     for(int i = 0; i < h; i++){
-        for(int j = 0; j < w; j++){
+        int j = 0;
+        while(j < w){
             mapPoint = (char)getchar();
+            if((int)mapPoint < 33){
+                continue;
+            }
+            if(mapPoint == '*'){
+                auto* starPoint = new Point;
+                starPoint->setRow(i);
+                starPoint->setColumn(j);
+                sslChars.InsertNodeAtTail(starPoint, nullptr);
+            }
             mapPoint = AvoidWhiteSpaces(mapPoint);
             mapArray[i][j] = mapPoint;
+            j++;
         }
     }
-    for(int i = 0; i < h; i++){
-        for(int j = 0; j < w; j++){
-            if(mapArray[i][j] == '*'){
-                CitySearch(i, j);
-            }
-        }
+    auto* sslCharsTemp = sslChars.getHead();
+    while(sslCharsTemp){
+        CitySearch(sslCharsTemp->data->getRow(), sslCharsTemp->data->getColumn());
+        sslCharsTemp = sslCharsTemp->next;
     }
-    auto *newString = new String;
-    newString->AddChar('A');
-    InsertNodeAtTail(newString);
-
+    bfs = new BFS(&sslString, mapArray, w, h);
+    bfs->SearchForRoute();
 }
 MapParser::~MapParser() {
     for(int i = 0; i < h; i++){
         delete[] mapArray[i];
     }
     delete[] mapArray;
+    delete bfs;
 }

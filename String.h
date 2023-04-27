@@ -11,7 +11,7 @@
 class String {
 private:
     char* string;
-    int size;
+    int size = 0;
     int reservedSize = 0;
 public:
     String();
