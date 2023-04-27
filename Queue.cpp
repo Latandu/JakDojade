@@ -13,7 +13,7 @@ void Queue::enQueue(int row, int column) {
     newPoint = new Point;
     newPoint->setRow(row);
     newPoint->setColumn(column);
-    InsertNodeAtTail(newPoint, nullptr);
+    InsertNodeAtTailWithoutAL(newPoint);
     if(front == nullptr) front = getHead();
     tail = getTail();
 }

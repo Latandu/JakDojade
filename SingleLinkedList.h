@@ -35,6 +35,9 @@ public:
     T * GetNameOfCity(int row, int column);
 
     void headEngine(SingleNode *newNode);
+    void InsertNodeAtTailWithoutAL(T *data, int moveCount);
+
+    void InsertNodeAtTailWithoutAL(T *data);
 };
 
 

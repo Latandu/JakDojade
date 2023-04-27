@@ -50,6 +50,7 @@ void BFS::SearchForRoute() {
                     neighbouringList->InsertNodeAtTailWithoutAL(newString , 0);
                     break;
                 }
+
                 queue.enQueue(bfsPointX, bfsPointY);
                 visited[bfsPointX][bfsPointY] = true;
             }

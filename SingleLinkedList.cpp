@@ -14,7 +14,15 @@ void SingleLinkedList<T>::InsertNodeAtTail(T *data, Point* pointForStr) {
     newNode->adjacencyList = new NeighbouringList;
     headEngine(newNode);
 }
-
+template <class T>
+void SingleLinkedList<T>::InsertNodeAtTailWithoutAL(T *data){
+    auto* newNode = new struct SingleNode();
+    newNode->data = data;
+    newNode->next = nullptr;
+    newNode->point = nullptr;
+    newNode->adjacencyList = nullptr;
+    headEngine(newNode);
+}
 template<class T>
 void SingleLinkedList<T>::headEngine(SingleLinkedList<T>::SingleNode *newNode) {
     if(!head){

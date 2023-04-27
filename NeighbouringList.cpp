@@ -27,7 +27,6 @@ NeighbouringList::~NeighbouringList() {
     while(head){
         auto* temp = head;
         head = head->next;
-        if(temp->data != nullptr) delete temp->data;
         delete temp;
     }
 }
