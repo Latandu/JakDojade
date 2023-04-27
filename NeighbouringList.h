@@ -12,6 +12,7 @@ protected:
     struct SingleNode{
         String* data;
         SingleNode* next;
+        SingleNode* prev;
         int mover = 0;
     };
     struct SingleNode* tail = nullptr;

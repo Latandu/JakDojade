@@ -2,19 +2,20 @@
 // Created by Latandu on 25/04/2023.
 //
 
-#ifndef JAKDOJADE_SINGLELINKEDLIST_H
-#define JAKDOJADE_SINGLELINKEDLIST_H
+#ifndef JAKDOJADE_DOUBLELINKEDLIST_H
+#define JAKDOJADE_DOUBLELINKEDLIST_H
 
 #include "String.h"
 #include "Point.h"
 #include "NeighbouringList.h"
-template<class T> class SingleLinkedList {
+template<class T> class DoubleLinkedList {
 protected:
     struct SingleNode{
         T* data;
         Point* point;
         SingleNode* next;
-        int mover = 0;
+        SingleNode* prev;
+        int moveCount = 0;
         NeighbouringList* adjacencyList;
         int counter = 0;
 
@@ -25,8 +26,8 @@ public:
     SingleNode *getTail() const {
         return tail;
     }
-    SingleLinkedList() = default;
-    ~SingleLinkedList();
+    DoubleLinkedList() = default;
+    ~DoubleLinkedList();
     SingleNode * getHead() const {
         return head;
     }
@@ -35,10 +36,9 @@ public:
     T * GetNameOfCity(int row, int column);
 
     void headEngine(SingleNode *newNode);
-    void InsertNodeAtTailWithoutAL(T *data, int moveCount);
 
     void InsertNodeAtTailWithoutAL(T *data);
 };
 
 
-#endif //JAKDOJADE_SINGLELINKEDLIST_H
+#endif //JAKDOJADE_DOUBLELINKEDLIST_H

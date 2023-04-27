@@ -6,9 +6,9 @@
 #define JAKDOJADE_QUEUE_H
 
 #include "Point.h"
-#include "SingleLinkedList.h"
+#include "DoubleLinkedList.h"
 
-class Queue : public SingleLinkedList<Point> {
+class Queue : public DoubleLinkedList<Point> {
 private:
    SingleNode* front = getHead();
    SingleNode* tail = getTail();

@@ -13,9 +13,9 @@ void NeighbouringList::InsertNodeAtTailWithoutAL(String *data, int moveCount){
 }
 void NeighbouringList::headEngine(NeighbouringList::SingleNode *newNode) {
     if(!head){
-        newNode->next = nullptr;
+        newNode->prev = nullptr;
         head = newNode;
-
+        tail = newNode;
         return;
     }
     tail = head;
@@ -23,6 +23,8 @@ void NeighbouringList::headEngine(NeighbouringList::SingleNode *newNode) {
         tail = tail->next;
     }
     tail->next = newNode;
+    newNode->prev = tail;
+    tail = newNode;
 }
 NeighbouringList::~NeighbouringList() {
     while(head){

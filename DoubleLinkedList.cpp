@@ -2,11 +2,11 @@
 // Created by Latandu on 25/04/2023.
 //
 
-#include "SingleLinkedList.h"
+#include "DoubleLinkedList.h"
 #include "Point.h"
 #include "NeighbouringList.h"
 template <class T>
-void SingleLinkedList<T>::InsertNodeAtTail(T *data, Point* pointForStr) {
+void DoubleLinkedList<T>::InsertNodeAtTail(T *data, Point* pointForStr) {
     auto* newNode = new struct SingleNode();
     newNode->data = data;
     newNode->point = pointForStr;
@@ -15,7 +15,7 @@ void SingleLinkedList<T>::InsertNodeAtTail(T *data, Point* pointForStr) {
     headEngine(newNode);
 }
 template <class T>
-void SingleLinkedList<T>::InsertNodeAtTailWithoutAL(T *data){
+void DoubleLinkedList<T>::InsertNodeAtTailWithoutAL(T *data){
     auto* newNode = new struct SingleNode();
     newNode->data = data;
     newNode->next = nullptr;
@@ -24,23 +24,24 @@ void SingleLinkedList<T>::InsertNodeAtTailWithoutAL(T *data){
     headEngine(newNode);
 }
 template<class T>
-void SingleLinkedList<T>::headEngine(SingleLinkedList<T>::SingleNode *newNode) {
+void DoubleLinkedList<T>::headEngine(DoubleLinkedList<T>::SingleNode *newNode) {
     if(!head){
-        newNode->next = nullptr;
+        newNode->prev = nullptr;
         head = newNode;
-
+        tail = newNode;
         return;
     }
     tail = head;
     while(tail->next != nullptr){
         tail = tail->next;
     }
-    tail->counter = tail->counter + 1;
     tail->next = newNode;
+    newNode->prev = tail;
+    tail = newNode;
 }
 
 template <class T>
-SingleLinkedList<T>::~SingleLinkedList() {
+DoubleLinkedList<T>::~DoubleLinkedList() {
     while(head){
         auto* temp = head;
         head = head->next;
@@ -52,7 +53,7 @@ SingleLinkedList<T>::~SingleLinkedList() {
 }
 
 template<class T>
-T* SingleLinkedList<T>::GetNameOfCity(int row, int column){
+T* DoubleLinkedList<T>::GetNameOfCity(int row, int column){
     auto* curr = head;
     while(curr){
         if(curr->point->getRow() == row && curr->point->getColumn() == column) return curr->data;
@@ -61,5 +62,5 @@ T* SingleLinkedList<T>::GetNameOfCity(int row, int column){
     return {};
 }
 
-template class SingleLinkedList<String>;
-template class SingleLinkedList<Point>;
+template class DoubleLinkedList<String>;
+template class DoubleLinkedList<Point>;

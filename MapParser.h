@@ -6,7 +6,7 @@
 #define JAKDOJADE_MAPPARSER_H
 #include "Point.h"
 
-#include "SingleLinkedList.h"
+#include "DoubleLinkedList.h"
 #include "BFS.h"
 
 class MapParser {
@@ -15,12 +15,12 @@ private:
     char c, mapPoint;
     char** mapArray;
     Point coordiantes;
-    SingleLinkedList<Point> sslChars;
+    DoubleLinkedList<Point> sslChars;
     const int ASCII_A = 65;
     const int ASCII_Z = 90;
     const int ASCII_0 = 48;
     const int ASCII_9 = 57;
-    SingleLinkedList<String> sslString;
+    DoubleLinkedList<String> sslString;
     BFS* bfs;
 public:
     MapParser();
