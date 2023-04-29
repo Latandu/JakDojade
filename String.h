@@ -21,6 +21,14 @@ public:
     void AddChar(char newChar);
     ~String();
     char* c_str() const;
+
+    bool CompareStrings(const String &other);
+
+    void CopyString(String *other);
+
+    int StringToIntConversion(const char *stringConvert);
+
+    int StringToIntConversion();
 };
 
 

@@ -6,12 +6,20 @@
 #include "String.h"
 #include "Point.h"
 #include "BFS.h"
+#include "Dijkstra.h"
 #include <iostream>
 MapParser::MapParser() {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-    std::cin >> w >> h;
-    mapArray = new char*[h];
+    String wS;
+    String hS;
+    while((c = (char)getchar()) != ' '){
+        wS.AddChar(c);
+    }
+    w = wS.StringToIntConversion();
+    while((c = (char)getchar()) != '\n'){
+        hS.AddChar(c);
+    }
+    h = hS.StringToIntConversion();
+    mapArray = new char*[h] ;
     for(int i = 0; i < h; i++){
         mapArray[i] = new char[w];
     }
@@ -24,13 +32,11 @@ bool MapParser::CitySearch(int row, int column){
     int newRow, newCol;
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
-           newRow = row + i;
-            newCol = column + j;
-            if (i == 0 && j == 0) {
-                continue;
-            }
+            if (i == 0 && j == 0) continue;
+             newRow = row + i;
+             newCol = column + j;
             if (newRow >= 0 && newRow < h && newCol >= 0 && newCol < w) {
-                int newChar = (int)mapArray[newRow][newCol];
+                int newChar = (int)(unsigned char)mapArray[newRow][newCol];
                 if((ASCII_0 <= newChar && newChar <= ASCII_9) || (ASCII_A <= newChar && newChar <= ASCII_Z)){
                     ParseCity(newRow, newCol, point);
                     return true;
@@ -42,30 +48,25 @@ bool MapParser::CitySearch(int row, int column){
 }
 void MapParser::ParseCity(int row, int column, Point* point){
     auto *newString = new String;
-
-    int newChar = (int)mapArray[row][column];
+    bool wentThrough = false;
+    int newChar = (int)(unsigned char)mapArray[row][column];
     while(column > 0 && ((ASCII_0 <= newChar && newChar <= ASCII_9) || (ASCII_A <= newChar && newChar <= ASCII_Z))){
         column--;
-        newChar = (int)mapArray[row][column];
+        wentThrough = true;
+        newChar = (int)(unsigned char)mapArray[row][column];
     }
-    column++;
-    newChar = (int)mapArray[row][column];
+    if(wentThrough) column++;
+    newChar = (int)(unsigned char)mapArray[row][column];
     while(column < w && ((ASCII_0 <= newChar && newChar <= ASCII_9) || (ASCII_A <= newChar && newChar <= ASCII_Z))){
         newString->AddChar((char)newChar);
         column++;
-        newChar = (int)mapArray[row][column];
+        newChar = (int)(unsigned char)mapArray[row][column];
     }
     sslString.InsertNodeAtTail(newString, point);
 
 }
-char MapParser::AvoidWhiteSpaces(char checkC){
-    if((int)checkC < 33){
-        checkC = (char)getchar();
-        AvoidWhiteSpaces(checkC);
-    }
-    return checkC;
-};
 void MapParser::ParseWholeMap() {
+
     for(int i = 0; i < h; i++){
         int j = 0;
         while(j < w){
@@ -79,7 +80,6 @@ void MapParser::ParseWholeMap() {
                 starPoint->setColumn(j);
                 sslChars.InsertNodeAtTail(starPoint, nullptr);
             }
-            mapPoint = AvoidWhiteSpaces(mapPoint);
             mapArray[i][j] = mapPoint;
             j++;
         }
@@ -91,7 +91,74 @@ void MapParser::ParseWholeMap() {
     }
     bfs = new BFS(&sslString, mapArray, w, h);
     bfs->SearchForRoute();
+    auto* starting = new String;
+    auto* finishing = new String;
+    while((c = (char)getchar()) == '\n');
+    ParseFlights();
+    ParseCities();
+    delete starting;
+    delete finishing;
 }
+
+void MapParser::ParseFlights() {
+    String numberOfFlights;
+    while(c != '\n'){
+        numberOfFlights.AddChar(c);
+        c = (char)getchar();
+    }
+    int numberOfFlightsInt = numberOfFlights.StringToIntConversion();
+    for(int i = 0; i < numberOfFlightsInt; i++){
+        String startingCity;
+        String finishingCity;
+        int distanceFromTo = ParseCommands(&startingCity, &finishingCity);
+        sslString.SearchForNodesForFlights(startingCity, finishingCity, distanceFromTo);
+    }
+}
+void MapParser::ParseCities(){
+    DoubleLinkedList<String> TravelledCities;
+    String numberOfCommands;
+    while((c = (char)getchar()) != '\n'){
+        numberOfCommands.AddChar(c);
+    }
+    int numbersOfCommandsInt = numberOfCommands.StringToIntConversion();
+    for(int i = 0; i < numbersOfCommandsInt; i++){
+        auto* startingCity = new String;
+        auto* finishingCity = new String;
+        int commandNr = ParseCommands(startingCity, finishingCity);
+        auto* dijkstraParsing = new Dijkstra(&sslString, &TravelledCities, startingCity, finishingCity);
+        int distance = dijkstraParsing->ProcessGraph();
+        std::cout << distance << " ";
+        if(commandNr == 1){
+        auto* nodeCheck = TravelledCities.getHead();
+            while(nodeCheck){
+                std::cout << nodeCheck->data->c_str() << " ";
+                nodeCheck = nodeCheck->next;
+            }
+        }
+        std::cout << std::endl;
+        delete dijkstraParsing;
+    }
+}
+int MapParser::ParseCommands(String* startingCity, String* finishingCity){
+    c = (char)getchar();
+    while(c != ' '){
+        startingCity->AddChar(c);
+        c = (char)getchar();
+    }
+    c = (char)getchar();
+    while(c != ' '){
+        finishingCity->AddChar(c);
+        c = (char)getchar();
+    }
+    c = (char)getchar();
+    String distanceTemp;
+    while(c != '\n'){
+        distanceTemp.AddChar(c);
+        c = (char)getchar();
+    }
+    return distanceTemp.StringToIntConversion();
+}
+
 MapParser::~MapParser() {
     for(int i = 0; i < h; i++){
         delete[] mapArray[i];

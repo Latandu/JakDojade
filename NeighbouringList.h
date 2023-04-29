@@ -8,19 +8,22 @@
 #include "String.h"
 
 class NeighbouringList {
-protected:
+public:
     struct SingleNode{
         String* data;
         SingleNode* next;
         SingleNode* prev;
+        int cityID = 0;
+        int getCityId() const;
         int mover = 0;
     };
+    SingleNode *getTail() const;
+    void headEngine(SingleNode *newNode);
+    SingleNode *getHead() const;
     struct SingleNode* tail = nullptr;
     struct SingleNode* head = nullptr;
-    void headEngine(SingleNode *newNode);
-public:
     NeighbouringList() = default;
-    void InsertNodeAtTailWithoutAL(String* data, int moveCount);
+    void InsertNodeAtTailWithoutAL(String* data, int moveCount, int cityID);
     ~NeighbouringList();
 };
 

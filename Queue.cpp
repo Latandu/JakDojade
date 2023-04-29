@@ -17,7 +17,6 @@ void Queue::enQueue(int row, int column) {
     if(front == nullptr) front = getHead();
     tail = getTail();
 }
-
 void Queue::deQueue(){
     SingleNode* temp = head;
     head = head->next;

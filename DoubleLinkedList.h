@@ -17,7 +17,8 @@ protected:
         SingleNode* prev;
         int moveCount = 0;
         NeighbouringList* adjacencyList;
-        int counter = 0;
+        int cityID = 0;
+        int counter = 1;
 
     };
     struct SingleNode* tail = nullptr;
@@ -33,11 +34,20 @@ public:
     }
     void InsertNodeAtTail(T *data, Point* pointForStr);
 
-    T * GetNameOfCity(int row, int column);
+    SingleNode * GetNameOfCity(int row, int column);
 
     void headEngine(SingleNode *newNode);
 
     void InsertNodeAtTailWithoutAL(T *data);
+
+    void InsertNodeAtTailWithDistance(int cityID, int distance, T *cityName);
+
+    SingleNode *GetNodeByName(const String &compareData);
+
+    void DeleteNode(int cityID);
+
+    void InsertNodeAtTailWithoutAL(T *data, int cityID);
+    void SearchForNodesForFlights(const String &startingFlight, String finishingFlight, int newDistance);
 };
 
 

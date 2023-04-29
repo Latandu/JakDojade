@@ -13,7 +13,7 @@ void BFS::SearchForRoute() {
         distance[i] = new int[lengthCol];
         for(int j = 0; j < lengthCol; j++){
             visited[i][j] = false;
-            visited[i][j] = 0;
+            distance[i][j] = 0;
         }
 
     }
@@ -30,14 +30,11 @@ void BFS::SearchForRoute() {
             for(int j = 0; j < lengthCol; j++) visited[i][j] = false;
         }
         queue.enQueue(checkingNode->point->getRow(), checkingNode->point->getColumn());
-        NeighbouringList* neighbouringList2 = checkingNode->adjacencyList;
-        String* newString2(singleLinkedList->GetNameOfCity(checkingNode->point->getRow(), checkingNode->point->getColumn()));
-        neighbouringList2->InsertNodeAtTailWithoutAL(newString2 , 0);
-        int moveCount = 0;
+        NeighbouringList* neighbouringList = checkingNode->adjacencyList;
+        auto* cityNameAndID = singleLinkedList->GetNameOfCity(checkingNode->point->getRow(), checkingNode->point->getColumn());
+        neighbouringList->InsertNodeAtTailWithoutAL(cityNameAndID->data , 0, cityNameAndID->cityID);
         while (queue.CheckifExists()) {
             Point p = queue.GetFront();
-            if (visited[p.getRow()][p.getColumn()] == foundCity)
-                continue;
             visited[p.getRow()][p.getColumn()] = true;
             queue.deQueue();
             for (auto &direction: directions) {
@@ -50,20 +47,19 @@ void BFS::SearchForRoute() {
                 if (mainArray[bfsPointX][bfsPointY] != '*' && mainArray[bfsPointX][bfsPointY] != '#') continue;
                 distance[bfsPointX][bfsPointY] = distance[p.getRow()][p.getColumn()] + 1;
                 if (mainArray[bfsPointX][bfsPointY] == '*' && visited[bfsPointX][bfsPointY] == false) {
-                    int bfsFinishedX = 0;
-                    int bfsFinishedY = 0;
+                    visited[bfsPointX][bfsPointY] = true;
+                    int bfsFinishedX;
+                    int bfsFinishedY;
                     for (auto &direction2: directions) {
                         bfsFinishedX = bfsPointX + direction2[0];
                         bfsFinishedY = bfsPointY + direction2[1];
                         if (bfsFinishedX< 0 || bfsFinishedY < 0 || bfsFinishedX>= lengthRow || bfsFinishedY >= lengthCol)
                             continue;
-                         visited[bfsFinishedX][bfsFinishedY] = foundCity;
+                         visited[bfsFinishedX][bfsFinishedY] = true;
 
                     }
-
-                    NeighbouringList* neighbouringList = checkingNode->adjacencyList;
-                    String* newString(singleLinkedList->GetNameOfCity(bfsPointX, bfsPointY));
-                    neighbouringList->InsertNodeAtTailWithoutAL(newString , distance[bfsPointX][bfsPointY] + 1);
+                    cityNameAndID = singleLinkedList->GetNameOfCity(bfsPointX, bfsPointY);
+                    neighbouringList->InsertNodeAtTailWithoutAL(cityNameAndID->data , distance[bfsPointX][bfsPointY] + 1, cityNameAndID->cityID);
                     break;
                 }
                 queue.enQueue(bfsPointX, bfsPointY);

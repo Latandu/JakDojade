@@ -12,7 +12,7 @@ class Queue : public DoubleLinkedList<Point> {
 private:
    SingleNode* front = getHead();
    SingleNode* tail = getTail();
-    Point* newPoint;
+   Point* newPoint;
 public:
     Queue();
     void deQueue();

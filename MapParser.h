@@ -8,31 +8,32 @@
 
 #include "DoubleLinkedList.h"
 #include "BFS.h"
+#include "Dijkstra.h"
 
 class MapParser {
 private:
     int w,h;
-    char c, mapPoint;
+    char c, mapPoint{};
     char** mapArray;
-    Point coordiantes;
+    Point coordiantes{};
     DoubleLinkedList<Point> sslChars;
     const int ASCII_A = 65;
     const int ASCII_Z = 90;
     const int ASCII_0 = 48;
     const int ASCII_9 = 57;
     DoubleLinkedList<String> sslString;
-    BFS* bfs;
+    BFS* bfs{};
 public:
     MapParser();
     ~MapParser();
-
     void ParseWholeMap();
-    char AvoidWhiteSpaces(char checkC);
-
     bool CitySearch(int row, int column);
-
-
     void ParseCity(int row, int column, Point *point);
+    int ParseCommands(String *startingCity, String *finishingCity);
+
+    void ParseFlights();
+
+    void ParseCities();
 };
 
 
