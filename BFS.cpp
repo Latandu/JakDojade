@@ -5,24 +5,19 @@
 #include "BFS.h"
 #include <iostream>
 void BFS::SearchForRoute() {
-    int** visited = new int*[lengthRow];
-    int** distance = new int*[lengthRow];
+    bool** visited = new bool*[lengthRow];
     for(int i = 0; i < lengthRow; i++){
-        visited[i] = new int[lengthCol];
-        distance[i] = new int[lengthCol];
-        for(int j = 0; j < lengthCol; j++){
-            visited[i][j] = false;
-            distance[i][j] = 0;
-        }
-
+        visited[i] = new bool[lengthCol];
     }
     struct PointR p{};
     auto* checkingNode = singleLinkedList->getHead();
     while(checkingNode) {
+        int moveCount = 0;
+        int nodesLeft = 1;
+        int nodesToCheck = 0;
         for(int i = 0; i < lengthRow; i++){
             for(int j = 0; j < lengthCol; j++){
-                visited[i][j] = 0;
-                distance[i][j] = 0;
+                visited[i][j] = false;
             }
         }
         Queue queue;
@@ -41,13 +36,10 @@ void BFS::SearchForRoute() {
             for (auto &direction: directions) {
                 int bfsPointX = p.x + direction[0];
                 int bfsPointY = p.y + direction[1];
-                if (bfsPointX < 0 || bfsPointY < 0 || bfsPointX >= lengthRow
-                    || bfsPointY >= lengthCol)
-                    continue;
+                if (bfsPointX < 0 || bfsPointY < 0 || bfsPointX >= lengthRow || bfsPointY >= lengthCol) continue;
                 if (visited[bfsPointX][bfsPointY]) continue;
                 if (mainArray[bfsPointX][bfsPointY] != '*' && mainArray[bfsPointX][bfsPointY] != '#') continue;
-                distance[bfsPointX][bfsPointY] = distance[p.x][p.y] + 1;
-                if (mainArray[bfsPointX][bfsPointY] == '*' && visited[bfsPointX][bfsPointY] == false) {
+                if (mainArray[bfsPointX][bfsPointY] == '*' && !visited[bfsPointX][bfsPointY]) {
                     visited[bfsPointX][bfsPointY] = true;
                     int bfsFinishedX;
                     int bfsFinishedY;
@@ -59,21 +51,26 @@ void BFS::SearchForRoute() {
                         visited[bfsFinishedX][bfsFinishedY] = true;
                     }
                     cityNameAndID = singleLinkedList->GetNameOfCity(bfsPointX, bfsPointY);
-                    neighbouringList->InsertNodeAtTailWithoutAL(cityNameAndID->data , distance[bfsPointX][bfsPointY], cityNameAndID->cityID);
+                    neighbouringList->InsertNodeAtTailWithoutAL(cityNameAndID->data , moveCount + 1, cityNameAndID->cityID);
                     continue;
                 }
                     queue.enQueue(bfsPointX, bfsPointY);
                     visited[bfsPointX][bfsPointY] = true;
+                    nodesToCheck++;
+            }
+            nodesLeft--;
+            if(nodesLeft == 0){
+                nodesLeft = nodesToCheck;
+                nodesToCheck = 0;
+                moveCount++;
             }
         }
         checkingNode = checkingNode->next;
     }
     for(int i = 0; i < lengthRow; i++){
         delete[] visited[i];
-        delete[] distance[i];
     }
     delete[] visited;
-    delete[] distance;
 }
 
 BFS::BFS(DoubleLinkedList* ssl,  char const * const * mainArray, int lengthCol, int lengthRow) {
