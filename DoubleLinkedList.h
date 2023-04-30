@@ -48,6 +48,12 @@ public:
 
     void InsertNodeAtTailWithoutAL(T *data, int cityID);
     void SearchForNodesForFlights(const String &startingFlight, String finishingFlight, int newDistance);
+
+    SingleNode *GetNodeByID(int id);
+
+    void InsertNodeAtHeadWithoutAL(T *data);
+
+    void InsertNodeAtHeadWithoutAL(T *data, int cityID);
 };
 
 

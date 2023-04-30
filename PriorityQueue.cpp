@@ -12,7 +12,7 @@ void PriorityQueue::PriorityEnQueue(int distance,int cityID, String* name){
     auto* newName = new String;
     newName->CopyString(name);
     InsertNodeAtTailWithDistance(cityID, distance, newName);
-    if(front == nullptr) front = getHead();
+    front = getHead();
 }
 void PriorityQueue::PriorityDeQueue(){
     SingleNode* temp = head;

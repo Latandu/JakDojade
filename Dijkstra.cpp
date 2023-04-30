@@ -16,16 +16,20 @@ Dijkstra::Dijkstra(DoubleLinkedList<String>* ddlString, DoubleLinkedList<String>
 int Dijkstra::ProcessGraph(){
     int* visited = new int[ddlString->getTail()->cityID + 1];
     int* distance = new int[ddlString->getTail()->cityID + 1];
+    int* previous = new int[ddlString->getTail()->cityID + 1];
     for(int i = 0; i < ddlString->getTail()->cityID + 1; i++){
         distance[i] = INT_MAX;
         visited[i] = false;
+        previous[i] = -1;
     }
+    int firstCityID;
     PriorityQueue priorityQueue;
     auto* temp = ddlString->getHead();
     while(!temp->data->CompareStrings(*startingNode)){
         temp = temp->next;
         if(temp == nullptr) exit(1);
     }
+    firstCityID = temp->cityID;
     distance[temp->cityID] = 0;
     bool firstValue = true;
     priorityQueue.PriorityEnQueue(0, temp->cityID, temp->data);
@@ -33,12 +37,12 @@ int Dijkstra::ProcessGraph(){
         int cityIDPrevious = priorityQueue.GetFront().cityID;
         auto* cityNamePrevious = new String;
         cityNamePrevious->CopyString(priorityQueue.GetFront().data);
-        if(!firstValue) travelledNodes->InsertNodeAtTailWithoutAL(cityNamePrevious, cityIDPrevious);
         firstValue = false;
         priorityQueue.PriorityDeQueue();
         if (visited[cityIDPrevious]) {
             continue;
         }
+
         auto* myNode = ddlString->getHead();
         myNode = ddlString->GetNodeByName(*cityNamePrevious);
         if(myNode == nullptr){
@@ -57,21 +61,30 @@ int Dijkstra::ProcessGraph(){
             String *cityName = adjacencyTemp->data;
             if (distance[cityID] > distance[cityIDPrevious] + weight){
                 distance[cityID] = distance[cityIDPrevious] + weight;
+                previous[cityID] = cityIDPrevious;
                 priorityQueue.PriorityEnQueue(distance[cityID], cityID, cityName);
                 newChildFound = true;
             }
-            if (cityName->CompareStrings(*finishingNode)) {
-                int distanceReturn;
-                if(travelledNodes->getTail() != nullptr) distanceReturn = distance[cityID] - travelledNodes->getTail()->counter;
-                else distanceReturn = distance[cityID];
-                delete[] distance;
-                delete[] visited;
-                return distanceReturn;
-            }
             adjacencyTemp = adjacencyTemp->next;
-            if(adjacencyTemp == nullptr && !newChildFound){
-                travelledNodes->DeleteNode(cityIDPrevious);
+        }
+        if (cityNamePrevious->CompareStrings(*finishingNode)) {
+            int distanceReturn;
+            distanceReturn = distance[cityIDPrevious];
+            int currentNode = cityIDPrevious;
+            while (currentNode != -1) {
+                if(currentNode == cityIDPrevious){
+                    currentNode = previous[currentNode];
+                    continue;
+                }
+                if(currentNode == firstCityID) break;
+                String* newString = new String;
+                newString->CopyString(ddlString->GetNodeByID(currentNode)->data);
+                travelledNodes->InsertNodeAtHeadWithoutAL(newString, currentNode);
+                currentNode = previous[currentNode];
             }
+            delete[] distance;
+            delete[] visited;
+            return distanceReturn;
         }
     }
     delete[] distance;

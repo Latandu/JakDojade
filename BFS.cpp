@@ -4,7 +4,6 @@
 
 #include "BFS.h"
 #include <iostream>
-#define foundCity 2
 void BFS::SearchForRoute() {
     int** visited = new int*[lengthRow];
     int** distance = new int*[lengthRow];
@@ -55,15 +54,14 @@ void BFS::SearchForRoute() {
                         bfsFinishedY = bfsPointY + direction2[1];
                         if (bfsFinishedX< 0 || bfsFinishedY < 0 || bfsFinishedX>= lengthRow || bfsFinishedY >= lengthCol)
                             continue;
-                         visited[bfsFinishedX][bfsFinishedY] = true;
-
+                        visited[bfsFinishedX][bfsFinishedY] = true;
                     }
                     cityNameAndID = singleLinkedList->GetNameOfCity(bfsPointX, bfsPointY);
-                    neighbouringList->InsertNodeAtTailWithoutAL(cityNameAndID->data , distance[bfsPointX][bfsPointY] + 1, cityNameAndID->cityID);
-                    break;
+                    neighbouringList->InsertNodeAtTailWithoutAL(cityNameAndID->data , distance[bfsPointX][bfsPointY], cityNameAndID->cityID);
+                    continue;
                 }
-                queue.enQueue(bfsPointX, bfsPointY);
-                visited[bfsPointX][bfsPointY] = true;
+                    queue.enQueue(bfsPointX, bfsPointY);
+                    visited[bfsPointX][bfsPointY] = true;
             }
         }
         checkingNode = checkingNode->next;

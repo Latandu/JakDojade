@@ -91,6 +91,10 @@ void MapParser::ParseWholeMap() {
     }
     bfs = new BFS(&sslString, mapArray, w, h);
     bfs->SearchForRoute();
+    for(int i = 0; i < h; i++){
+        delete[] mapArray[i];
+    }
+    delete[] mapArray;
     auto* starting = new String;
     auto* finishing = new String;
     while((c = (char)getchar()) == '\n');
@@ -115,13 +119,13 @@ void MapParser::ParseFlights() {
     }
 }
 void MapParser::ParseCities(){
-    DoubleLinkedList<String> TravelledCities;
     String numberOfCommands;
     while((c = (char)getchar()) != '\n'){
         numberOfCommands.AddChar(c);
     }
     int numbersOfCommandsInt = numberOfCommands.StringToIntConversion();
     for(int i = 0; i < numbersOfCommandsInt; i++){
+        DoubleLinkedList<String> TravelledCities;
         auto* startingCity = new String;
         auto* finishingCity = new String;
         int commandNr = ParseCommands(startingCity, finishingCity);
@@ -137,6 +141,8 @@ void MapParser::ParseCities(){
         }
         std::cout << std::endl;
         delete dijkstraParsing;
+        delete startingCity;
+        delete finishingCity;
     }
 }
 int MapParser::ParseCommands(String* startingCity, String* finishingCity){
@@ -160,9 +166,6 @@ int MapParser::ParseCommands(String* startingCity, String* finishingCity){
 }
 
 MapParser::~MapParser() {
-    for(int i = 0; i < h; i++){
-        delete[] mapArray[i];
-    }
-    delete[] mapArray;
+
     delete bfs;
 }
