@@ -6,7 +6,7 @@
 #define JAKDOJADE_PRIORITYQUEUE_H
 
 #include "DoubleLinkedList.h"
-class PriorityQueue : DoubleLinkedList<String>{
+class PriorityQueue : DoubleLinkedList{
 private:
     SingleNode* front = getHead();
     struct PointWithID {
@@ -15,7 +15,6 @@ private:
         int distance;
     };
     SingleNode* tail = getTail();
-    Point* newPoint;
 public:
     PriorityQueue();
 

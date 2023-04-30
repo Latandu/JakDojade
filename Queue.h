@@ -5,23 +5,22 @@
 #ifndef JAKDOJADE_QUEUE_H
 #define JAKDOJADE_QUEUE_H
 
-#include "Point.h"
 #include "DoubleLinkedList.h"
 
-class Queue : public DoubleLinkedList<Point> {
+class Queue : public DoubleLinkedList {
 private:
    SingleNode* front = getHead();
    SingleNode* tail = getTail();
-   Point* newPoint;
+   struct PointR{
+       int x, y;
+   };
 public:
     Queue();
     void deQueue();
 
-    Point GetFront();
+    PointR GetFront();
 
     bool CheckifExists();
-
-    bool isEmpty();
 
     void enQueue(int row, int column);
 };

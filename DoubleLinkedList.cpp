@@ -4,90 +4,40 @@
 
 #include <cstdlib>
 #include "DoubleLinkedList.h"
-#include "Point.h"
 #include "NeighbouringList.h"
-template <class T>
-void DoubleLinkedList<T>::InsertNodeAtTail(T *data, Point* pointForStr) {
+void DoubleLinkedList::InsertNodeAtTail(String *data, int row, int column) {
     auto* newNode = new struct SingleNode();
     newNode->data = data;
-    newNode->point = pointForStr;
+    newNode->row = row;
+    newNode->column = column;
     newNode->next = nullptr;
     newNode->adjacencyList = new NeighbouringList;
     headEngine(newNode);
 }
-template <class T>
-void DoubleLinkedList<T>::InsertNodeAtTailWithoutAL(T *data, int cityID){
+
+void DoubleLinkedList::InsertNodeAtTailWithoutAL(String *data, int row, int column){
     auto* newNode = new struct SingleNode();
     newNode->data = data;
-    newNode->cityID = cityID;
+    newNode->row = row;
+    newNode->column = column;
     newNode->next = nullptr;
-    newNode->point = nullptr;
-    newNode->adjacencyList = nullptr;
-    if(!head){
-        newNode->prev = nullptr;
-        head = newNode;
-        tail = newNode;
-        return;
-    }
-    tail = head;
-    while(tail->next != nullptr){
-        tail = tail->next;
-    }
-    newNode->counter = tail->counter + 1;
-    tail->next = newNode;
-    newNode->prev = tail;
-    tail = newNode;
-}
-template <class T>
-void DoubleLinkedList<T>::InsertNodeAtTailWithoutAL(T *data){
-    auto* newNode = new struct SingleNode();
-    newNode->data = data;
-    newNode->next = nullptr;
-    newNode->point = nullptr;
     newNode->adjacencyList = nullptr;
     headEngine(newNode);
 }
-template <class T>
-void DoubleLinkedList<T>::InsertNodeAtHeadWithoutAL(T *data, int cityID){
+void DoubleLinkedList::InsertNodeAtHeadWithoutAL(String *data, int cityID){
     auto* newNode = new struct SingleNode();
     newNode->data = data;
     newNode->next = nullptr;
-    newNode->point = nullptr;
     newNode->adjacencyList = nullptr;
     newNode->cityID = cityID;
     newNode->next = head;
     head = newNode;
 }
-template <class T>
-void DoubleLinkedList<T>::DeleteNode(int cityID){
-    auto* curr = head;
-    while (curr) {
-        if (curr->cityID == cityID) {
-            if (curr == head) {
-                head = curr->next;
-            }
-            if (curr == tail) {
-                tail = curr->prev;
-            }
-            if (curr->prev) {
-                curr->prev->next = curr->next;
-            }
-            if (curr->next) {
-                curr->next->prev = curr->prev;
-            }
-            delete curr;
-            break;
-        }
-        curr = curr->next;
-    }
-}
-template <class T>
-void DoubleLinkedList<T>::InsertNodeAtTailWithDistance(int cityID, int distance, T* cityName){
+void DoubleLinkedList::InsertNodeAtTailWithDistance(int cityID, int distance, String* cityName){
     auto* newNode = new struct SingleNode();
     newNode->data = cityName;
     newNode->cityID = cityID;
     newNode->next = nullptr;
-    newNode->point = nullptr;
     newNode->adjacencyList = nullptr;
     newNode->moveCount = distance;
     if(!head){
@@ -112,16 +62,12 @@ void DoubleLinkedList<T>::InsertNodeAtTailWithDistance(int cityID, int distance,
         tail = newNode;
     }
 }
-template<class T>
-void DoubleLinkedList<T>::headEngine(DoubleLinkedList<T>::SingleNode *newNode) {
+void DoubleLinkedList::headEngine(DoubleLinkedList::SingleNode *newNode) {
     if(!head){
         newNode->prev = nullptr;
         head = newNode;
         tail = newNode;
         return;
-    }
-    while(tail->next != nullptr){
-        tail = tail->next;
     }
     newNode->cityID = tail->cityID + 1;
     tail->next = newNode;
@@ -129,19 +75,17 @@ void DoubleLinkedList<T>::headEngine(DoubleLinkedList<T>::SingleNode *newNode) {
     tail = newNode;
 }
 
-template <class T>
-DoubleLinkedList<T>::~DoubleLinkedList() {
+DoubleLinkedList::~DoubleLinkedList() {
     while(head){
         auto* temp = head;
         head = head->next;
         delete temp->data;
-        delete temp->point;
         delete temp->adjacencyList;
         delete temp;
     }
 }
 
-template<> void DoubleLinkedList<String>::SearchForNodesForFlights(const String& startingFlight, String finishingFlight, int newDistance){
+void DoubleLinkedList::SearchForNodesForFlights(const String& startingFlight, String finishingFlight, int newDistance){
     auto* curr = head;
     auto* neighbourNew = curr->adjacencyList;
     int cityID;
@@ -161,16 +105,16 @@ template<> void DoubleLinkedList<String>::SearchForNodesForFlights(const String&
     }
     neighbourNew->InsertNodeAtTailWithoutAL(&finishingFlight, newDistance , cityID);
 }
-template<class T>
-typename DoubleLinkedList<T>::SingleNode * DoubleLinkedList<T>::GetNameOfCity(int row, int column){
+
+typename DoubleLinkedList::SingleNode * DoubleLinkedList::GetNameOfCity(int row, int column){
     auto* curr = head;
     while(curr){
-        if(curr->point->getRow() == row && curr->point->getColumn() == column) return curr;
+        if(curr->row == row && curr->column == column) return curr;
         curr = curr->next;
     }
     return {};
 }
-template<> typename DoubleLinkedList<String>::SingleNode * DoubleLinkedList<String>::GetNodeByName(const String& compareData){
+typename DoubleLinkedList::SingleNode * DoubleLinkedList::GetNodeByName(const String& compareData){
     auto* curr = head;
     while(curr){
         if(curr->data->CompareStrings(compareData)) return curr;
@@ -178,7 +122,7 @@ template<> typename DoubleLinkedList<String>::SingleNode * DoubleLinkedList<Stri
     }
     return {};
 }
-template<> typename DoubleLinkedList<String>::SingleNode * DoubleLinkedList<String>::GetNodeByID(int id){
+typename DoubleLinkedList::SingleNode * DoubleLinkedList::GetNodeByID(int id){
     auto* curr = head;
     while(curr){
         if(curr->cityID == id) return curr;
@@ -187,5 +131,3 @@ template<> typename DoubleLinkedList<String>::SingleNode * DoubleLinkedList<Stri
     return {};
 }
 
-template class DoubleLinkedList<String>;
-template class DoubleLinkedList<Point>;

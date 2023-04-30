@@ -6,13 +6,12 @@
 #define JAKDOJADE_DOUBLELINKEDLIST_H
 
 #include "String.h"
-#include "Point.h"
 #include "NeighbouringList.h"
-template<class T> class DoubleLinkedList {
+class DoubleLinkedList {
 protected:
     struct SingleNode{
-        T* data;
-        Point* point;
+        String* data;
+        int row, column;
         SingleNode* next;
         SingleNode* prev;
         int moveCount = 0;
@@ -32,28 +31,31 @@ public:
     SingleNode * getHead() const {
         return head;
     }
-    void InsertNodeAtTail(T *data, Point* pointForStr);
 
     SingleNode * GetNameOfCity(int row, int column);
 
     void headEngine(SingleNode *newNode);
 
-    void InsertNodeAtTailWithoutAL(T *data);
-
-    void InsertNodeAtTailWithDistance(int cityID, int distance, T *cityName);
-
     SingleNode *GetNodeByName(const String &compareData);
 
     void DeleteNode(int cityID);
 
-    void InsertNodeAtTailWithoutAL(T *data, int cityID);
     void SearchForNodesForFlights(const String &startingFlight, String finishingFlight, int newDistance);
 
     SingleNode *GetNodeByID(int id);
 
-    void InsertNodeAtHeadWithoutAL(T *data);
 
-    void InsertNodeAtHeadWithoutAL(T *data, int cityID);
+    void InsertNodeAtTail(String *data, int x, int y);
+
+    void InsertNodeAtTailWithoutAL(String *data, int cityID);
+
+    void InsertNodeAtTailWithoutAL(String *data);
+
+    void InsertNodeAtHeadWithoutAL(String *data, int cityID);
+
+    void InsertNodeAtTailWithDistance(int cityID, int distance, String *cityName);
+
+    void InsertNodeAtTailWithoutAL(String *data, int row, int column);
 };
 
 

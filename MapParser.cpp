@@ -4,7 +4,6 @@
 
 #include "MapParser.h"
 #include "String.h"
-#include "Point.h"
 #include "BFS.h"
 #include "Dijkstra.h"
 #include <iostream>
@@ -26,9 +25,6 @@ MapParser::MapParser() {
 
 }
 bool MapParser::CitySearch(int row, int column){
-    auto *point = new Point;
-    point->setRow(row);
-    point->setColumn(column);
     int newRow, newCol;
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
@@ -38,7 +34,7 @@ bool MapParser::CitySearch(int row, int column){
             if (newRow >= 0 && newRow < h && newCol >= 0 && newCol < w) {
                 int newChar = (int)(unsigned char)mapArray[newRow][newCol];
                 if((ASCII_0 <= newChar && newChar <= ASCII_9) || (ASCII_A <= newChar && newChar <= ASCII_Z)){
-                    ParseCity(newRow, newCol, point);
+                    ParseCity(newRow, newCol, row,column);
                     return true;
                 }
             }
@@ -46,7 +42,9 @@ bool MapParser::CitySearch(int row, int column){
     } return false;
 
 }
-void MapParser::ParseCity(int row, int column, Point* point){
+void MapParser::ParseCity(int row, int column, int starPointX, int starPointY){
+    int RowN = starPointX;
+    int ColN = starPointY;
     auto *newString = new String;
     bool wentThrough = false;
     int newChar = (int)(unsigned char)mapArray[row][column];
@@ -62,7 +60,7 @@ void MapParser::ParseCity(int row, int column, Point* point){
         column++;
         newChar = (int)(unsigned char)mapArray[row][column];
     }
-    sslString.InsertNodeAtTail(newString, point);
+    sslString.InsertNodeAtTail(newString, RowN, ColN);
 
 }
 void MapParser::ParseWholeMap() {
@@ -75,10 +73,7 @@ void MapParser::ParseWholeMap() {
                 continue;
             }
             if(mapPoint == '*'){
-                auto* starPoint = new Point;
-                starPoint->setRow(i);
-                starPoint->setColumn(j);
-                sslChars.InsertNodeAtTail(starPoint, nullptr);
+                sslChars.InsertNodeAtTail(nullptr, i,j);
             }
             mapArray[i][j] = mapPoint;
             j++;
@@ -86,7 +81,7 @@ void MapParser::ParseWholeMap() {
     }
     auto* sslCharsTemp = sslChars.getHead();
     while(sslCharsTemp){
-        CitySearch(sslCharsTemp->data->getRow(), sslCharsTemp->data->getColumn());
+        CitySearch(sslCharsTemp->row, sslCharsTemp->column);
         sslCharsTemp = sslCharsTemp->next;
     }
     bfs = new BFS(&sslString, mapArray, w, h);
@@ -125,7 +120,7 @@ void MapParser::ParseCities(){
     }
     int numbersOfCommandsInt = numberOfCommands.StringToIntConversion();
     for(int i = 0; i < numbersOfCommandsInt; i++){
-        DoubleLinkedList<String> TravelledCities;
+        DoubleLinkedList TravelledCities;
         auto* startingCity = new String;
         auto* finishingCity = new String;
         int commandNr = ParseCommands(startingCity, finishingCity);

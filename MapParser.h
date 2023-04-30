@@ -4,7 +4,6 @@
 
 #ifndef JAKDOJADE_MAPPARSER_H
 #define JAKDOJADE_MAPPARSER_H
-#include "Point.h"
 
 #include "DoubleLinkedList.h"
 #include "BFS.h"
@@ -15,25 +14,25 @@ private:
     int w,h;
     char c, mapPoint{};
     char** mapArray;
-    Point coordiantes{};
-    DoubleLinkedList<Point> sslChars;
+    DoubleLinkedList sslChars;
     const int ASCII_A = 65;
     const int ASCII_Z = 90;
     const int ASCII_0 = 48;
     const int ASCII_9 = 57;
-    DoubleLinkedList<String> sslString;
+    DoubleLinkedList sslString;
     BFS* bfs{};
 public:
     MapParser();
     ~MapParser();
     void ParseWholeMap();
     bool CitySearch(int row, int column);
-    void ParseCity(int row, int column, Point *point);
     int ParseCommands(String *startingCity, String *finishingCity);
 
     void ParseFlights();
 
     void ParseCities();
+
+    void ParseCity(int row, int column, int starPointX, int starPointY);
 };
 
 

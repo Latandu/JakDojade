@@ -9,13 +9,16 @@
 #include "Queue.h"
 class BFS {
 private:
-    DoubleLinkedList<String>* singleLinkedList;
+    DoubleLinkedList* singleLinkedList;
     char** mainArray;
     int directions[4][2] = {{0,1},{0,-1},{-1,0},{1,0}};
     int lengthRow = 0;
+    struct PointR{
+        int x, y;
+    };
     int lengthCol = 0;
 public:
-    BFS(DoubleLinkedList<String> *ssl, char **mainArray, int lengthCol, int lengthRow);
+    BFS(DoubleLinkedList *ssl, char **mainArray, int lengthCol, int lengthRow);
     void SearchForRoute();
     ~BFS();
 };

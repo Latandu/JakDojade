@@ -36,23 +36,16 @@ size_t String::getSize() const {
     return size;
 }
 
-void String::AddChar(char newChar){
-    char* newStr;
-    size_t len = getSize();
-    if(len + 2 > reservedSize){
+void String::AddChar(char newChar) {
+    if (size + 1 >= reservedSize) {
         reservedSize += 10;
-        newStr = string;
-        string = new char[reservedSize];
-        strcpy(string, newStr);
-        delete[] newStr;
-        strncat(string, &newChar, 1);
-        size = strlen(string);
-
+        char* newString = new char[reservedSize];
+        memcpy(newString, string, size);
+        delete[] string;
+        string = newString;
     }
-    else{
-        strncat(string, &newChar, 1);
-        size = strlen(string);
-    }
+    string[size++] = newChar;
+    string[size] = '\0';
 }
 void String::CopyString(String* other){
     if (other) {

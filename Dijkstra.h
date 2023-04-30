@@ -8,18 +8,12 @@
 #include "DoubleLinkedList.h"
 class Dijkstra {
 private:
-    struct PointWithID {
-        String* data;
-        DoubleLinkedList<String> visitedNodes;
-        int cityID;
-        int distance;
-    };
-    DoubleLinkedList<String>* travelledNodes;
-    DoubleLinkedList<String>* ddlString;
+    DoubleLinkedList* travelledNodes;
+    DoubleLinkedList* ddlString;
     String* startingNode;
     String* finishingNode;
 public:
-    Dijkstra(DoubleLinkedList<String> *ddlString, DoubleLinkedList<String> *travelledCities, String *startingNode,
+    Dijkstra(DoubleLinkedList *ddlString, DoubleLinkedList *travelledCities, String *startingNode,
              String *finishingNode);
 
     int ProcessGraph();

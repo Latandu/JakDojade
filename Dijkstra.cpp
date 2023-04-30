@@ -7,7 +7,7 @@
 #include <climits>
 #include <iostream>
 
-Dijkstra::Dijkstra(DoubleLinkedList<String>* ddlString, DoubleLinkedList<String>* travelledCities, String* startingNode, String* finishingNode) {
+Dijkstra::Dijkstra(DoubleLinkedList* ddlString, DoubleLinkedList* travelledCities, String* startingNode, String* finishingNode) {
     this->ddlString = ddlString;
     this->startingNode = startingNode;
     this->finishingNode = finishingNode;
@@ -31,13 +31,11 @@ int Dijkstra::ProcessGraph(){
     }
     firstCityID = temp->cityID;
     distance[temp->cityID] = 0;
-    bool firstValue = true;
     priorityQueue.PriorityEnQueue(0, temp->cityID, temp->data);
     while(priorityQueue.CheckIfExists()){
         int cityIDPrevious = priorityQueue.GetFront().cityID;
         auto* cityNamePrevious = new String;
         cityNamePrevious->CopyString(priorityQueue.GetFront().data);
-        firstValue = false;
         priorityQueue.PriorityDeQueue();
         if (visited[cityIDPrevious]) {
             continue;
@@ -48,7 +46,6 @@ int Dijkstra::ProcessGraph(){
         if(myNode == nullptr){
             continue;
         }
-        bool newChildFound = false;
         auto *adjacencyTemp = myNode->adjacencyList->getHead();
         while (adjacencyTemp) {
             int weight = adjacencyTemp->mover;
@@ -63,7 +60,6 @@ int Dijkstra::ProcessGraph(){
                 distance[cityID] = distance[cityIDPrevious] + weight;
                 previous[cityID] = cityIDPrevious;
                 priorityQueue.PriorityEnQueue(distance[cityID], cityID, cityName);
-                newChildFound = true;
             }
             adjacencyTemp = adjacencyTemp->next;
         }
@@ -77,17 +73,19 @@ int Dijkstra::ProcessGraph(){
                     continue;
                 }
                 if(currentNode == firstCityID) break;
-                String* newString = new String;
+                auto* newString = new String;
                 newString->CopyString(ddlString->GetNodeByID(currentNode)->data);
                 travelledNodes->InsertNodeAtHeadWithoutAL(newString, currentNode);
                 currentNode = previous[currentNode];
             }
             delete[] distance;
             delete[] visited;
+            delete[] previous;
             return distanceReturn;
         }
     }
     delete[] distance;
     delete[] visited;
+    delete[] previous;
     return INT_MAX;
 }
