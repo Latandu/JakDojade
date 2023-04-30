@@ -76,7 +76,7 @@ void BFS::SearchForRoute() {
     delete[] distance;
 }
 
-BFS::BFS(DoubleLinkedList* ssl, char** mainArray, int lengthCol, int lengthRow) {
+BFS::BFS(DoubleLinkedList* ssl,  char const * const * mainArray, int lengthCol, int lengthRow) {
     this->singleLinkedList = ssl;
     this->lengthRow = lengthRow;
     this->lengthCol = lengthCol;
