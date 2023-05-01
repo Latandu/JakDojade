@@ -8,6 +8,9 @@ void BFS::SearchForRoute() {
     bool** visited = new bool*[lengthRow];
     for(int i = 0; i < lengthRow; i++){
         visited[i] = new bool[lengthCol];
+        for(int j = 0; j < lengthCol; j++){
+            visited[i][j] = false;
+        }
     }
     struct PointR p{};
     for(int iterator = 0; iterator < Hashmap::getSize(); iterator++){
@@ -15,18 +18,11 @@ void BFS::SearchForRoute() {
         if(bfs->getHead() == nullptr) continue;
         auto* checkingNode = bfs->getHead();
         while(checkingNode) {
+            struct PointR p2{};
             int moveCount = 0;
             int nodesLeft = 1;
             int nodesToCheck = 0;
-            for(int i = 0; i < lengthRow; i++){
-                for(int j = 0; j < lengthCol; j++){
-                    visited[i][j] = false;
-                }
-            }
             Queue queue;
-            for(int i = 0; i < lengthRow; i++){
-                for(int j = 0; j < lengthCol; j++) visited[i][j] = false;
-            }
             Queue visitedQueue;
             queue.enQueue(checkingNode->row, checkingNode->column);
             NeighbouringList* neighbouringList = checkingNode->adjacencyList;
@@ -35,6 +31,7 @@ void BFS::SearchForRoute() {
             while (queue.CheckifExists()) {
                 p.x = queue.GetFront().x;
                 p.y = queue.GetFront().y;
+                visitedQueue.enQueue(p.x, p.y);
                 visited[p.x][p.y] = true;
                 queue.deQueue();
                 for (auto &direction: directions) {
@@ -43,7 +40,6 @@ void BFS::SearchForRoute() {
                     if (bfsPointX < 0 || bfsPointY < 0 || bfsPointX >= lengthRow || bfsPointY >= lengthCol) continue;
                     if (visited[bfsPointX][bfsPointY]) continue;
                     if (mainArray[bfsPointX][bfsPointY] != '*' && mainArray[bfsPointX][bfsPointY] != '#') continue;
-                    //visitedQueue.enQueue(bfsPointX, bfsPointY);
                     if (mainArray[bfsPointX][bfsPointY] == '*' && !visited[bfsPointX][bfsPointY]) {
                         visited[bfsPointX][bfsPointY] = true;
                         int bfsFinishedX;
@@ -53,6 +49,7 @@ void BFS::SearchForRoute() {
                             bfsFinishedY = bfsPointY + direction2[1];
                             if (bfsFinishedX< 0 || bfsFinishedY < 0 || bfsFinishedX>= lengthRow || bfsFinishedY >= lengthCol)
                                 continue;
+                            visitedQueue.enQueue(bfsFinishedX, bfsFinishedY);
                             visited[bfsFinishedX][bfsFinishedY] = true;
                         }
                         cityNameAndID = hashmap->GetByVertex(bfsPointX, bfsPointY);
@@ -60,6 +57,7 @@ void BFS::SearchForRoute() {
                         continue;
                     }
                         queue.enQueue(bfsPointX, bfsPointY);
+                        visitedQueue.enQueue(bfsPointX, bfsPointY);
                         visited[bfsPointX][bfsPointY] = true;
                         nodesToCheck++;
                 }
@@ -69,6 +67,12 @@ void BFS::SearchForRoute() {
                     nodesToCheck = 0;
                     moveCount++;
                 }
+            }
+            while(visitedQueue.CheckifExists()){
+                p2.x = visitedQueue.GetFront().x;
+                p2.y = visitedQueue.GetFront().y;
+                visited[p2.x][p2.y] = false;
+                visitedQueue.deQueue();
             }
             checkingNode = checkingNode->next;
         }

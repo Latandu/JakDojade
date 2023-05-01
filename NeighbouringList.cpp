@@ -11,20 +11,12 @@ void NeighbouringList::InsertNodeAtTailWithoutAL(String *data, int moveCount, in
     newNode->mover = moveCount;
     newNode->next = nullptr;
     newNode->cityID = cityID;
-    headEngine(newNode);
-}
-void NeighbouringList::headEngine(NeighbouringList::SingleNode *newNode) {
-    if(!head){
-        newNode->prev = nullptr;
-        head = newNode;
-        tail = newNode;
-        return;
-    }
-    while(tail->next != nullptr){
-        tail = tail->next;
-    }
-    tail->next = newNode;
     newNode->prev = tail;
+    if (!head) {
+        head = newNode;
+    } else {
+        tail->next = newNode;
+    }
     tail = newNode;
 }
 NeighbouringList::~NeighbouringList() {

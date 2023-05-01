@@ -13,7 +13,13 @@ void DoubleLinkedList::InsertNodeAtTail(String *data, int row, int column, int c
     newNode->column = column;
     newNode->next = nullptr;
     newNode->adjacencyList = new NeighbouringList;
-    headEngine(newNode);
+    newNode->prev = tail;
+    if (!head) {
+        head = newNode;
+    } else {
+        tail->next = newNode;
+    }
+    tail = newNode;
 }
 
 void DoubleLinkedList::InsertNodeAtTailWithoutAL(String *data, int row, int column){
@@ -23,7 +29,13 @@ void DoubleLinkedList::InsertNodeAtTailWithoutAL(String *data, int row, int colu
     newNode->column = column;
     newNode->next = nullptr;
     newNode->adjacencyList = nullptr;
-    headEngine(newNode);
+    newNode->prev = tail;
+    if (!head) {
+        head = newNode;
+    } else {
+        tail->next = newNode;
+    }
+    tail = newNode;
 }
 void DoubleLinkedList::InsertNodeAtHeadWithoutAL(String *data, int cityID){
     auto* newNode = new struct SingleNode();
@@ -54,16 +66,16 @@ void DoubleLinkedList::InsertNodeAtTailWithDistance(int cityID, int distance, St
 
     }
     else {
-        tail = head;
-        while(tail->next != nullptr){
-            tail = tail->next;
-        }
-        tail->next = newNode;
         newNode->prev = tail;
+        if (!head) {
+            head = newNode;
+        } else {
+            tail->next = newNode;
+        }
         tail = newNode;
     }
 }
-void DoubleLinkedList::headEngine(DoubleLinkedList::SingleNode *newNode) {
+/*void DoubleLinkedList::headEngine(DoubleLinkedList::SingleNode *newNode) {
     if(!head){
         newNode->prev = nullptr;
         head = newNode;
@@ -73,7 +85,7 @@ void DoubleLinkedList::headEngine(DoubleLinkedList::SingleNode *newNode) {
     tail->next = newNode;
     newNode->prev = tail;
     tail = newNode;
-}
+}*/
 
 DoubleLinkedList::~DoubleLinkedList() {
     while(head){

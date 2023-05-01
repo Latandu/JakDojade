@@ -9,7 +9,7 @@
 #include "DoubleLinkedList.h"
 class Hashmap {
 private:
-    static const int SIZE = 99999;
+    static const int SIZE = 9999;
     int counter = 0;
 public:
     int getCounter() const;
