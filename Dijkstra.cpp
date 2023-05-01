@@ -14,7 +14,7 @@ Dijkstra::Dijkstra(DoubleLinkedList* ddlString, DoubleLinkedList* travelledCitie
     this->travelledNodes= travelledCities;
 }
 int Dijkstra::ProcessGraph(){
-    int* visited = new int[ddlString->getTail()->cityID + 1];
+    bool* visited = new bool[ddlString->getTail()->cityID + 1];
     int* distance = new int[ddlString->getTail()->cityID + 1];
     int* previous = new int[ddlString->getTail()->cityID + 1];
     for(int i = 0; i < ddlString->getTail()->cityID + 1; i++){
