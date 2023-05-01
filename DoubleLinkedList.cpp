@@ -5,10 +5,11 @@
 #include <cstdlib>
 #include "DoubleLinkedList.h"
 #include "NeighbouringList.h"
-void DoubleLinkedList::InsertNodeAtTail(String *data, int row, int column) {
+void DoubleLinkedList::InsertNodeAtTail(String *data, int row, int column, int cityID) {
     auto* newNode = new struct SingleNode();
     newNode->data = data;
     newNode->row = row;
+    newNode->cityID = cityID;
     newNode->column = column;
     newNode->next = nullptr;
     newNode->adjacencyList = new NeighbouringList;
@@ -69,7 +70,6 @@ void DoubleLinkedList::headEngine(DoubleLinkedList::SingleNode *newNode) {
         tail = newNode;
         return;
     }
-    newNode->cityID = tail->cityID + 1;
     tail->next = newNode;
     newNode->prev = tail;
     tail = newNode;
@@ -112,7 +112,7 @@ typename DoubleLinkedList::SingleNode * DoubleLinkedList::GetNameOfCity(int row,
         if(curr->row == row && curr->column == column) return curr;
         curr = curr->next;
     }
-    return {};
+    return nullptr;
 }
 typename DoubleLinkedList::SingleNode * DoubleLinkedList::GetNodeByName(const String& compareData){
     auto* curr = head;

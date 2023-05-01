@@ -6,16 +6,16 @@
 #define JAKDOJADE_DIJKSTRA_H
 
 #include "DoubleLinkedList.h"
+#include "Hashmap.h"
+
 class Dijkstra {
 private:
     DoubleLinkedList* travelledNodes;
-    DoubleLinkedList* ddlString;
+    Hashmap* hashmap;
     String* startingNode;
     String* finishingNode;
 public:
-    Dijkstra(DoubleLinkedList *ddlString, DoubleLinkedList *travelledCities, String *startingNode,
-             String *finishingNode);
-
+    Dijkstra(Hashmap *hashmap1, DoubleLinkedList *travelledCities, String *startingNode, String *finishingNode);
     int ProcessGraph();
 };
 

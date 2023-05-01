@@ -9,6 +9,7 @@
 #include "NeighbouringList.h"
 class DoubleLinkedList {
 protected:
+public:
     struct SingleNode{
         String* data;
         int row, column;
@@ -17,12 +18,10 @@ protected:
         int moveCount = 0;
         NeighbouringList* adjacencyList;
         int cityID = 0;
-        int counter = 1;
 
     };
     struct SingleNode* tail = nullptr;
     struct SingleNode* head = nullptr;
-public:
     SingleNode *getTail() const {
         return tail;
     }
@@ -45,7 +44,7 @@ public:
     SingleNode *GetNodeByID(int id);
 
 
-    void InsertNodeAtTail(String *data, int x, int y);
+    void InsertNodeAtTail(String *data, int x, int y, int cityID);
 
     void InsertNodeAtTailWithoutAL(String *data, int cityID);
 

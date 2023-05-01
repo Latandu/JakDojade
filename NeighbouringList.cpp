@@ -20,7 +20,6 @@ void NeighbouringList::headEngine(NeighbouringList::SingleNode *newNode) {
         tail = newNode;
         return;
     }
-    tail = head;
     while(tail->next != nullptr){
         tail = tail->next;
     }

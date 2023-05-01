@@ -43,6 +43,7 @@ bool MapParser::CitySearch(int row, int column){
 
 }
 void MapParser::ParseCity(int row, int column, int starPointX, int starPointY){
+    static int cityID = 0;
     int RowN = starPointX;
     int ColN = starPointY;
     auto *newString = new String;
@@ -60,8 +61,9 @@ void MapParser::ParseCity(int row, int column, int starPointX, int starPointY){
         column++;
         newChar = (int)(unsigned char)mapArray[row][column];
     }
-    sslString.InsertNodeAtTail(newString, RowN, ColN);
-
+    //sslString.InsertNodeAtTail(newString, RowN, ColN);
+    hashmap.PutIntoMain(newString, RowN, ColN, cityID);
+    cityID++;
 }
 void MapParser::ParseWholeMap() {
 
@@ -73,7 +75,7 @@ void MapParser::ParseWholeMap() {
                 continue;
             }
             if(mapPoint == '*'){
-                sslChars.InsertNodeAtTail(nullptr, i,j);
+                sslChars.InsertNodeAtTail(nullptr, i,j,0);
             }
             mapArray[i][j] = mapPoint;
             j++;
@@ -84,7 +86,7 @@ void MapParser::ParseWholeMap() {
         CitySearch(sslCharsTemp->row, sslCharsTemp->column);
         sslCharsTemp = sslCharsTemp->next;
     }
-    bfs = new BFS(&sslString, mapArray, w, h);
+    bfs = new BFS(&hashmap, mapArray, w, h);
     bfs->SearchForRoute();
     for(int i = 0; i < h; i++){
         delete[] mapArray[i];
@@ -110,7 +112,9 @@ void MapParser::ParseFlights() {
         String startingCity;
         String finishingCity;
         int distanceFromTo = ParseCommands(&startingCity, &finishingCity);
-        sslString.SearchForNodesForFlights(startingCity, finishingCity, distanceFromTo);
+       // sslString.SearchForNodesForFlights(startingCity, finishingCity, distanceFromTo);
+        int cityID = hashmap.Get(finishingCity)->cityID;
+        hashmap.Put(&startingCity, distanceFromTo, &finishingCity, cityID);
     }
 }
 void MapParser::ParseCities(){
@@ -124,7 +128,7 @@ void MapParser::ParseCities(){
         auto* startingCity = new String;
         auto* finishingCity = new String;
         int commandNr = ParseCommands(startingCity, finishingCity);
-        auto* dijkstraParsing = new Dijkstra(&sslString, &TravelledCities, startingCity, finishingCity);
+        auto* dijkstraParsing = new Dijkstra(&hashmap, &TravelledCities, startingCity, finishingCity);
         int distance = dijkstraParsing->ProcessGraph();
         std::cout << distance << " ";
         if(commandNr == 1){

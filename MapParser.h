@@ -8,13 +8,14 @@
 #include "DoubleLinkedList.h"
 #include "BFS.h"
 #include "Dijkstra.h"
-
+#include "Hashmap.h"
 class MapParser {
 private:
     int w,h;
     char c, mapPoint{};
     char** mapArray;
     DoubleLinkedList sslChars;
+    Hashmap hashmap;
     const int ASCII_A = 65;
     const int ASCII_Z = 90;
     const int ASCII_0 = 48;

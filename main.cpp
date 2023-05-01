@@ -1,4 +1,3 @@
-#include <iostream>
 #include "MapParser.h"
 int main() {
     MapParser mapParser;
