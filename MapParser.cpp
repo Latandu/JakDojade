@@ -25,6 +25,7 @@ MapParser::MapParser() {
 
 }
 bool MapParser::CitySearch(int row, int column){
+    //iterating over all 8 vertices, excluding the 0,0 one
     int newRow, newCol;
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
@@ -61,7 +62,6 @@ void MapParser::ParseCity(int row, int column, int starPointX, int starPointY){
         column++;
         newChar = (int)(unsigned char)mapArray[row][column];
     }
-    //sslString.InsertNodeAtTail(newString, RowN, ColN);
     hashmap.PutIntoMain(newString, RowN, ColN, cityID);
     cityID++;
 }
@@ -112,7 +112,6 @@ void MapParser::ParseFlights() {
         String startingCity;
         String finishingCity;
         int distanceFromTo = ParseCommands(&startingCity, &finishingCity);
-       // sslString.SearchForNodesForFlights(startingCity, finishingCity, distanceFromTo);
         int cityID = hashmap.Get(finishingCity)->cityID;
         hashmap.Put(&startingCity, distanceFromTo, &finishingCity, cityID);
     }

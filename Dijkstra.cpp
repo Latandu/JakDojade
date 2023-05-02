@@ -72,6 +72,7 @@ int Dijkstra::ProcessGraph(){
             int currentNode = cityIDPrevious;
             while (currentNode != -1) {
                 if(currentNode == cityIDPrevious){
+                    delete currentString;
                     currentString = previous[currentNode].data;
                     currentNode = previous[currentNode].cityID;
                     continue;
@@ -80,6 +81,7 @@ int Dijkstra::ProcessGraph(){
                 auto* newString = new String;
                 newString->CopyString(currentString);
                 travelledNodes->InsertNodeAtHeadWithoutAL(newString, currentNode);
+                delete currentString;
                 currentString = previous[currentNode].data;
                 currentNode = previous[currentNode].cityID;
             }

@@ -12,15 +12,15 @@ Hashmap::Hashmap(){
 
 unsigned long Hashmap::HashFunc(const String &key) {
    //djb2 hashing algorithm
-    /*char* t  = key.c_str();
+    char* t  = key.c_str();
     int c;
     unsigned long hash = 5381;
     c = (int)(unsigned char)*t++;
     while(c){
          hash = ((hash << 5) + hash) + c;
         c = (int)(unsigned char)*t++;
-    }*/
-    return key.getSize() % SIZE;
+    }
+    return hash % SIZE;
 }
 
 void Hashmap::Put(String *key, int distance, String *City, int cityID) {
@@ -34,23 +34,31 @@ void Hashmap::PutIntoMain(String* key, int row, int column, int cityID){
 }
 
 DoubleLinkedList::SingleNode* Hashmap::Get(const String& key){
-    int index = HashFunc(key);
+    unsigned long index = HashFunc(key);
     return table[index]->GetNodeByName(key);
 
 }
 DoubleLinkedList * Hashmap::GetByID(int x){
     return table[x];
 }
-DoubleLinkedList::SingleNode * Hashmap::GetByVertex(int row, int column){
-    for(auto & i : table){
-        if(i->getHead() != nullptr){
-            auto* returnValue = i->GetNameOfCity(row, column)       ;
-            if(returnValue != nullptr) return returnValue;
+void Hashmap::AddNeighbours(const DoubleLinkedList *bfs, DoubleLinkedList::SingleNode *checkingNode, int moveCount,
+                        int bfsPointX, int bfsPointY) {
+    bool finished = false;
+    for(int i2 = 0; i2 < Hashmap::getSize(); i2++){
+        DoubleLinkedList* bfs2 = GetByID(i2);
+        if(bfs->getHead() == nullptr) continue;
+        auto* currentNode = bfs2->getHead();
+        while(currentNode){
+            if(currentNode->row == bfsPointX && currentNode->column == bfsPointY){
+                checkingNode->adjacencyList->InsertNodeAtTailWithoutAL(currentNode->data, moveCount + 1, currentNode->cityID);
+                finished = true;
+                break;
+            }
+            currentNode = currentNode->next;
         }
+        if(finished) break;
     }
-    return nullptr;
 }
-
 int Hashmap::getSize() {
     return SIZE;
 }

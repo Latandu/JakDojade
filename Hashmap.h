@@ -28,6 +28,10 @@ public:
     DoubleLinkedList::SingleNode * GetByVertex(int row, int column);
 
     void Put(String *key, int distance, String *City, int cityID);
+
+    void
+    AddNeighbours(const DoubleLinkedList *bfs, DoubleLinkedList::SingleNode *checkingNode, int moveCount, int bfsPointX,
+                  int bfsPointY);
 };
 
 

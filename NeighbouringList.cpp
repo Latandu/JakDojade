@@ -11,7 +11,6 @@ void NeighbouringList::InsertNodeAtTailWithoutAL(String *data, int moveCount, in
     newNode->mover = moveCount;
     newNode->next = nullptr;
     newNode->cityID = cityID;
-    newNode->prev = tail;
     if (!head) {
         head = newNode;
     } else {
