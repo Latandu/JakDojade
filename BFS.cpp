@@ -8,9 +8,7 @@ void BFS::SearchForRoute() {
     bool** visited = new bool*[lengthRow];
     for(int i = 0; i < lengthRow; i++){
         visited[i] = new bool[lengthCol];
-        for(int j = 0; j < lengthCol; j++){
-            visited[i][j] = false;
-        }
+        for(int j = 0; j < lengthCol; j++) visited[i][j] = false;
     }
     struct PointR p{};
     for(int iterator = 0; iterator < Hashmap::getSize(); iterator++){
@@ -18,7 +16,6 @@ void BFS::SearchForRoute() {
         if(bfs->getHead() == nullptr) continue;
         auto* checkingNode = bfs->getHead();
         while(checkingNode) {
-            struct PointR p2{};
             int moveCount = 0;
             int nodesLeft = 1;
             int nodesToCheck = 0;
@@ -41,6 +38,7 @@ void BFS::SearchForRoute() {
                     if (visited[bfsPointX][bfsPointY]) continue;
                     if (mainArray[bfsPointX][bfsPointY] != '*' && mainArray[bfsPointX][bfsPointY] != '#') continue;
                     if (mainArray[bfsPointX][bfsPointY] == '*' && !visited[bfsPointX][bfsPointY]) {
+                        visitedQueue.enQueue(bfsPointX, bfsPointY);
                         visited[bfsPointX][bfsPointY] = true;
                         int bfsFinishedX;
                         int bfsFinishedY;
@@ -68,13 +66,11 @@ void BFS::SearchForRoute() {
                     moveCount++;
                 }
             }
+            checkingNode = checkingNode->next;
             while(visitedQueue.CheckifExists()){
-                p2.x = visitedQueue.GetFront().x;
-                p2.y = visitedQueue.GetFront().y;
-                visited[p2.x][p2.y] = false;
+                visited[visitedQueue.GetFront().x][visitedQueue.GetFront().y] = false;
                 visitedQueue.deQueue();
             }
-            checkingNode = checkingNode->next;
         }
     }
     for(int i = 0; i < lengthRow; i++){

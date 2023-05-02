@@ -11,16 +11,16 @@ Hashmap::Hashmap(){
 }
 
 unsigned long Hashmap::HashFunc(const String &key) {
-    //djb2 hashing algorithm
-    char* t  = key.c_str();
+   //djb2 hashing algorithm
+    /*char* t  = key.c_str();
     int c;
     unsigned long hash = 5381;
     c = (int)(unsigned char)*t++;
     while(c){
          hash = ((hash << 5) + hash) + c;
         c = (int)(unsigned char)*t++;
-    }
-    return hash % SIZE;
+    }*/
+    return key.getSize() % SIZE;
 }
 
 void Hashmap::Put(String *key, int distance, String *City, int cityID) {
