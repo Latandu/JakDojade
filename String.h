@@ -21,6 +21,7 @@ public:
     void AddChar(char newChar);
     ~String();
     char* c_str() const;
+    String& operator=(const String& other);
 
     bool CompareStrings(const String &other);
 

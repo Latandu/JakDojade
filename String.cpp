@@ -48,7 +48,7 @@ void String::AddChar(char newChar) {
     string[size] = '\0';
 }
 void String::CopyString(String* other){
-    if (other) {
+    if (other && other != this) {
         size_t otherSize = other->getSize();
         if (otherSize > 0) {
             reservedSize = otherSize + 10;
@@ -76,7 +76,19 @@ int String::StringToIntConversion(){
     char* pEnd;
     return strtol(this->string, &pEnd, 10);
 }
+String& String::operator=(const String& other) {
+    if (this != &other) {
+        char* new_string = new char[other.size + 1];
+        strcpy(new_string, other.string);
+        if (other.string == nullptr) return *this;
+        delete[] string;
+        string = new_string;
+        size = other.size;
+        reservedSize = other.reservedSize;
 
+    }
+    return *this;
+}
 char * String::c_str() const {
     return string;
 }

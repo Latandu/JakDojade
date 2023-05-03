@@ -16,7 +16,7 @@ Dijkstra::Dijkstra(Hashmap* hashmap1, DoubleLinkedList* travelledCities, String*
 }
 int Dijkstra::ProcessGraph(){
     struct StringID{
-        String* data;
+        String data;
         int cityID;
     };
     bool* visited = new bool[hashmap->getCounter() + 1];
@@ -25,7 +25,6 @@ int Dijkstra::ProcessGraph(){
     for(int i = 0; i < hashmap->getCounter() + 1; i++){
         distance[i] = INT_MAX;
         visited[i] = false;
-        previous[i].data = nullptr;
         previous[i].cityID = -1;
     }
     int firstCityID;
@@ -33,17 +32,18 @@ int Dijkstra::ProcessGraph(){
     auto* temp = hashmap->Get(*startingNode);
     firstCityID = temp->cityID;
     distance[temp->cityID] = 0;
-    priorityQueue.PriorityEnQueue(0, temp->cityID, temp->data);
+    priorityQueue.PriorityEnQueue(0, temp->cityID, *temp->data);
     while(priorityQueue.CheckIfExists()){
         int cityIDPrevious = priorityQueue.GetFront().cityID;
-        auto* cityNamePrevious = new String;
-        cityNamePrevious->CopyString(priorityQueue.GetFront().data);
+        //auto* cityNamePrevious = new String;
+        //cityNamePrevious->CopyString(priorityQueue.GetFront().data);
+        String cityNamePrevious = priorityQueue.GetFront().data;
         priorityQueue.PriorityDeQueue();
         if (visited[cityIDPrevious]) {
             continue;
         }
 
-        auto* myNode = hashmap->Get(*cityNamePrevious);
+        auto* myNode = hashmap->Get(cityNamePrevious);
         if(myNode == nullptr){
             continue;
         }
@@ -56,7 +56,7 @@ int Dijkstra::ProcessGraph(){
                 continue;
             }
             visited[cityIDPrevious] = true;
-            String *cityName = adjacencyTemp->data;
+            String cityName = *adjacencyTemp->data;
             if (distance[cityID] > distance[cityIDPrevious] + weight){
                 distance[cityID] = distance[cityIDPrevious] + weight;
                 previous[cityID].data = cityNamePrevious;
@@ -65,27 +65,24 @@ int Dijkstra::ProcessGraph(){
             }
             adjacencyTemp = adjacencyTemp->next;
         }
-        if (cityNamePrevious->CompareStrings(*finishingNode)) {
+        if (cityNamePrevious.CompareStrings(*finishingNode)) {
             int distanceReturn;
             distanceReturn = distance[cityIDPrevious];
-            String* currentString = new String;
+            String currentString;
             int currentNode = cityIDPrevious;
             while (currentNode != -1) {
                 if(currentNode == cityIDPrevious){
-                    delete currentString;
                     currentString = previous[currentNode].data;
                     currentNode = previous[currentNode].cityID;
                     continue;
                 }
                 if(currentNode == firstCityID) break;
                 auto* newString = new String;
-                newString->CopyString(currentString);
+                newString->CopyString(&currentString);
                 travelledNodes->InsertNodeAtHeadWithoutAL(newString, currentNode);
-                delete currentString;
                 currentString = previous[currentNode].data;
                 currentNode = previous[currentNode].cityID;
             }
-            delete currentString;
             delete[] distance;
             delete[] visited;
             delete[] previous;
@@ -93,7 +90,7 @@ int Dijkstra::ProcessGraph(){
         }
     }
     delete[] distance;
-    delete[] visited;
     delete[] previous;
+    delete[] visited;
     return INT_MAX;
 }
